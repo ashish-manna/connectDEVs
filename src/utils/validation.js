@@ -12,5 +12,10 @@ const singhUpDataValidation = (req) => {
     throw new Error("Please enter a strong password for better safety.");
   }
 };
-
-module.exports = { singhUpDataValidation };
+const loginDataValidation = (req) => {
+  const { email } = req.body;
+  if (!validator.isEmail(email)) {
+    throw new Error("Email is not valid");
+  }
+};
+module.exports = { singhUpDataValidation, loginDataValidation };
