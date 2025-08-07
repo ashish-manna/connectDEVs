@@ -1,9 +1,12 @@
+require("dotenv").config();
 const express = require("express");
-const dotenv = require("dotenv");
 const connectDB = require("./config/database");
+const authRouter = require("./route/auth");
 
 const app = express();
-dotenv.config();
+app.use(express.json());
+
+app.use("/api", authRouter);
 
 app.use("/", (req, res) => {
   res.send("Hello from root..");
