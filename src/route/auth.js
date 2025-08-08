@@ -6,18 +6,20 @@ const {
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const userAuth = require("../middleware/userAuth");
 
 const authRouter = express.Router();
 
 authRouter.post("/signup", async (req, res) => {
   try {
     singhUpDataValidation(req);
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, age } = req.body;
     const hashPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       firstName,
       lastName,
       email,
+      age,
       password: hashPassword,
     });
     await newUser.save();
@@ -48,6 +50,10 @@ authRouter.post("/login", async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: `Invalid credential` });
   }
+});
+authRouter.post("/logout", userAuth, (req, res) => {
+  res.cookie("token", null, { expires: new Date(Date.now()) });
+  res.status(200).json({ message: `User logout successfully` });
 });
 
 module.exports = authRouter;
