@@ -46,10 +46,24 @@ const updatePasswordValidation = (req) => {
   );
   return isAllowed;
 };
+const sendRequestValidation = (req) => {
+  const { status, receiverId } = req.params;
+  const user = req.user;
+  const validSatus = ["interested", "ignored"];
+  const isValidStatus = validSatus.includes(status);
+
+  if (!isValidStatus) {
+    throw new Error("Requested Staus is not valid");
+  }
+  if (receiverId === user._id.toString()) {
+    throw new Error("Invalid request");
+  }
+};
 
 module.exports = {
   singhUpDataValidation,
   loginDataValidation,
   editDataValidation,
   updatePasswordValidation,
+  sendRequestValidation,
 };
