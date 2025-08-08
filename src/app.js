@@ -2,14 +2,19 @@ require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/database");
 const authRouter = require("./route/auth");
+const profileRouter = require("./route/profile");
+const cookieParser = require("cookie-parser");
 
 const app = express();
+
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api", authRouter);
+app.use("/api", profileRouter);
 
 app.use("/", (req, res) => {
-  res.send("Hello from root..");
+  res.status(200).json({ message: `Server is up and running...` });
 });
 
 connectDB()
