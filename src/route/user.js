@@ -1,9 +1,10 @@
 const express = require("express");
 const userAuth = require("../middleware/userAuth");
 const Request = require("../models/request");
+const User = require("../models/user");
 
 const userRouter = express.Router();
-const USER_PUBLIC_DATA = "firstName lastName skills age about";
+const USER_PUBLIC_DATA = "firstName lastName skills age about photoUrl";
 
 userRouter.get("/received/request", userAuth, async (req, res) => {
   try {
@@ -39,6 +40,28 @@ userRouter.get("/connections", userAuth, async (req, res) => {
     res.status(200).json({ data: filteredList });
   } catch (err) {
     res.json({ message: err.message });
+  }
+});
+userRouter.get("/feed", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+    const hideProfileList = await Request.find({
+      $or: [{ receiverId: user._id }, { senderId: user._id }],
+    }).select("senderId receiverId");
+    const filterdHideProfileList = new Set();
+    hideProfileList.forEach((profile) => {
+      filterdHideProfileList.add(profile.senderId.toString());
+      filterdHideProfileList.add(profile.receiverId.toString());
+    });
+    const feedProfileList = await User.find({
+      $and: [
+        { _id: { $nin: Array.from(filterdHideProfileList) } },
+        { _id: { $nin: user._id } },
+      ],
+    }).select(USER_PUBLIC_DATA);
+    res.status(200).json({ data: feedProfileList });
+  } catch (err) {
+    res.status(404).json({ message: `ERROR: ${err.message}` });
   }
 });
 
