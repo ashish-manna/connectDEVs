@@ -6,7 +6,6 @@ const {
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const userAuth = require("../middleware/userAuth");
 
 const authRouter = express.Router();
 
@@ -36,7 +35,7 @@ authRouter.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      throw new Error("User not Found...");
+      return res.status(401).json({ message: `Please login` });
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
@@ -44,14 +43,15 @@ authRouter.post("/login", async (req, res) => {
     }
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY);
     res.cookie("token", token);
-    res
-      .status(200)
-      .json({ message: `Logged in sucessfully as ${user.firstName}` });
+    res.status(200).json({
+      message: `Logged in sucessfully as ${user.firstName}`,
+      user: user,
+    });
   } catch (err) {
-    res.status(500).json({ message: `Invalid credential` });
+    res.status(500).json({ message: `Invalid credential ${err.message}` });
   }
 });
-authRouter.post("/logout", userAuth, (req, res) => {
+authRouter.post("/logout", (req, res) => {
   res.cookie("token", null, { expires: new Date(Date.now()) });
   res.status(200).json({ message: `User logout successfully` });
 });

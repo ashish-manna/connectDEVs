@@ -6,9 +6,16 @@ const profileRouter = require("./route/profile");
 const cookieParser = require("cookie-parser");
 const requestRouter = require("./route/request");
 const userRouter = require("./route/user");
+const cors = require("cors");
 
 const app = express();
 
+app.use(
+  cors({
+    origin: process.env.VITE_APP_URL,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
