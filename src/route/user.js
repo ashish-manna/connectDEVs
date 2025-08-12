@@ -15,7 +15,16 @@ userRouter.get("/received/request", userAuth, async (req, res) => {
     })
       .populate("senderId", USER_PUBLIC_DATA)
       .select("senderId");
-    res.status(200).json({ data: receivedRequests });
+    const formattedData = receivedRequests.map((req) => ({
+      _id: req._id,
+      sender_id: req.senderId._id,
+      firstName: req.senderId.firstName,
+      photoUrl: req.senderId.photoUrl,
+      about: req.senderId.about,
+      skills: req.senderId.skills,
+      age: req.senderId.age,
+    }));
+    res.status(200).json({ data: formattedData });
   } catch (err) {
     res.json({ message: err.message });
   }

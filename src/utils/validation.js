@@ -1,15 +1,15 @@
 const validator = require("validator");
 
 const singhUpDataValidation = (req) => {
-  const { email, password, firstName, lastName } = req.body;
-  if (!firstName || !password || !email || !lastName) {
+  const { email, password, firstName, age } = req.body;
+  if (!firstName || !password || !email || !age) {
     throw new Error("Please fill required inputs.");
   }
   if (!validator.isEmail(email)) {
     throw new Error("Email is not valid.");
   }
   if (!validator.isStrongPassword(password)) {
-    throw new Error("Please enter a strong password for better safety.");
+    throw new Error("Please enter a strong password");
   }
 };
 const loginDataValidation = (req) => {
