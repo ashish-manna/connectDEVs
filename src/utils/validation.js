@@ -19,22 +19,26 @@ const loginDataValidation = (req) => {
   }
 };
 const editDataValidation = (req) => {
-  if (!req.body || Object.keys(req.body).length === 0) {
-    throw new Error("Noting to update");
+  const allowedFields = ["firstName", "lastName", "about", "skills", "age"];
+
+  const filteredBody = {};
+  if (req.body && Object.keys(req.body).length > 0) {
+    for (const key of Object.keys(req.body)) {
+      if (allowedFields.includes(key)) {
+        filteredBody[key] = req.body[key];
+      }
+    }
   }
-  const allowedFields = [
-    "firstName",
-    "lastName",
-    "about",
-    "skills",
-    "age",
-    "photoUrl",
-  ];
-  const isAllowed = Object.keys(req.body).every((field) =>
-    allowedFields.includes(field)
-  );
-  return isAllowed;
+  const hasText = Object.keys(filteredBody).length > 0;
+  const hasImage = !!req.file;
+
+  if (!hasText && !hasImage) {
+    throw new Error("Nothing to update!!");
+  }
+
+  return filteredBody;
 };
+
 const updatePasswordValidation = (req) => {
   const { newPassword } = req.body;
   if (!validator.isStrongPassword(newPassword)) {

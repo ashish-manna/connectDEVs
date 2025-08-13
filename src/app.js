@@ -9,6 +9,7 @@ const userRouter = require("./route/user");
 const cors = require("cors");
 
 const app = express();
+require("./config/cloudinary");
 
 app.use(
   cors({
