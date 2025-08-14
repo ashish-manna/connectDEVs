@@ -26,7 +26,10 @@ const userSchema = mongoose.Schema(
     },
     photoUrl: {
       type: String,
-      default: process.env.DUMMY_DEFAULT_PROFILE_IMG,
+      default: function () {
+        const randomAvatar = Math.floor(Math.random() * 100) + 1;
+        return `${process.env.DUMMY_DEFAULT_PROFILE_IMG}/${randomAvatar}`;
+      },
       validate: (val) => {
         if (!validator.isURL(val)) {
           throw new Error("Photo URL is not valid!!");
