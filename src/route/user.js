@@ -4,7 +4,8 @@ const Request = require("../models/request");
 const User = require("../models/user");
 
 const userRouter = express.Router();
-const USER_PUBLIC_DATA = "firstName lastName skills age about photoUrl";
+const USER_PUBLIC_DATA =
+  "firstName lastName skills age about photoUrl createdAt";
 
 userRouter.get("/received/request", userAuth, async (req, res) => {
   try {
@@ -23,6 +24,7 @@ userRouter.get("/received/request", userAuth, async (req, res) => {
       about: req.senderId.about,
       skills: req.senderId.skills,
       age: req.senderId.age,
+      createdAt: req.senderId.createdAt,
     }));
     res.status(200).json({ data: formattedData });
   } catch (err) {
