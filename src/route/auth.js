@@ -43,8 +43,8 @@ authRouter.post("/login", async (req, res) => {
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY);
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      sameSite: "Lax",
+      secure: false,
     });
 
     res.status(200).json({
