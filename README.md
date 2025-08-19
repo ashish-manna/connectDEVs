@@ -14,31 +14,22 @@ A backend microservice built with **Node.js**, **Express**, and **MongoDB** for 
 
 ---
 
-## 📂 Project Structure
-connectdevsserver/
-│
-├── src/
-│ ├── app.js # Main application entry
-│ ├── route/ # API route definitions
-│ ├── model/ # Mongoose schemas
-│ ├── config/ # Database connection setup
-│ └── middlewares/ # Custom middlewares
-│ └── utils/ # Custom utlity functions
-├── .env.sample # Environment variables template
-├── package.json
-└── README.md
 
-
----
 
 ## ⚙️ Environment Variables
 
 Copy `.env.sample` to `.env` and fill in the values:
 
+```base
 PORT=5000
 MONGODB_CONNECTION_URL=your_mongodb_connection_string
 DUMMY_DEFAULT_PROFILE_IMG=url_to_default_profile_image
+VITE_APP_URL=localhost || your_frontend_hosted_url
 JWT_SECRET_KEY=your_secret_key
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_secret
+```
 
 
 ## 🛠 Installation & Local Development
