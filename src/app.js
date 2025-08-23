@@ -7,8 +7,12 @@ const cookieParser = require("cookie-parser");
 const requestRouter = require("./route/request");
 const userRouter = require("./route/user");
 const cors = require("cors");
+const { createServer } = require("http");
+const initializingSocket = require("./utils/socket");
 
 const app = express();
+const server = createServer(app);
+initializingSocket(server);
 require("./config/cloudinary");
 
 app.use(
@@ -32,7 +36,7 @@ app.use("/", (req, res) => {
 connectDB()
   .then(() => {
     console.log(`Database connected successfuly...`);
-    app.listen(process.env.PORT || 8000, () => {
+    server.listen(process.env.PORT || 8000, () => {
       console.log(`server is running on PORT: ${process.env.PORT}...`);
     });
   })
