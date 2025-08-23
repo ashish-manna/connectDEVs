@@ -1,4 +1,6 @@
 const { Server } = require("socket.io");
+const Chat = require("../models/chat");
+const mongoose = require("mongoose");
 
 const initializingSocket = (server) => {
   const io = new Server(server, {
@@ -13,10 +15,27 @@ const initializingSocket = (server) => {
       socket.join(roomId);
       console.log(`${firstName} joined this room ${roomId}`);
     });
-    socket.on("sendMessage", ({ userId, toUserId, text, firstName }) => {
+    socket.on("sendMessage", async ({ userId, toUserId, text, firstName }) => {
       const roomId = [userId, toUserId].sort().join("_");
       io.to(roomId).emit("receivedMessage", { firstName, text });
-      //   console.log(newMessage);
+      try {
+        let chat = await Chat.findOne({
+          participants: { $all: [userId, toUserId] },
+        });
+        if (!chat) {
+          chat = new Chat({
+            participants: [userId, toUserId],
+            messages: [],
+          });
+        }
+        chat.messages.push({
+          senderId: userId,
+          text,
+        });
+        await chat.save();
+      } catch (err) {
+        console.log(err);
+      }
     });
     socket.on("disconnect", () => {});
   });
