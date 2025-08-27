@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/app.js",
+    "ngrok": "ngrok http 8000",
     "start": "node src/app.js"
   },
   "keywords": [
@@ -27,6 +28,7 @@
     "sharp": "^0.34.3",
     "socket.io": "^4.8.1",
     "streamifier": "^0.1.1",
+    "stripe": "^18.4.0",
     "validator": "^13.15.15"
   }
 }
